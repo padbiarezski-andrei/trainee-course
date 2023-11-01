@@ -52,7 +52,7 @@ func reverseWords1(s string) string {
 	return string(rune_arr)
 }
 
-func reverseWords2(s string) string {
-	panic("not implemented")
-	return ""
-}
+// func reverseWords2(s string) string {
+// 	panic("not implemented")
+// 	return ""
+// }
