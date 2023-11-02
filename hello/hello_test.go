@@ -5,14 +5,15 @@ import (
 )
 
 func TestHello(t *testing.T) {
-	tests := map[string]struct {
-		want string
+	tests := []struct {
+		testName string
+		want     string
 	}{
-		"base": {want: "Hello, world!"},
+		{testName: "base", want: "Hello, world!"},
 	}
 
-	for name, tc := range tests {
-		t.Run(name, func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.testName, func(t *testing.T) {
 			got := Hello()
 			if tc.want != got {
 				t.Errorf("expected: %#v, got: %#v", tc.want, got)
