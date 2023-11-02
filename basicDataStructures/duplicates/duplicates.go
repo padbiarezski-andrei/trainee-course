@@ -1,14 +1,14 @@
 package duplicates
 
 func removeDuplicates(ss []string) []string {
-	res := make([]string, 0, len(ss))
-	set := make(map[string]struct{}, len(ss))
+	result := make([]string, 0, len(ss))
+	string_set := make(map[string]struct{}, len(ss))
 	for _, s := range ss {
-		if _, ok := set[s]; !ok { //not found
-			set[s] = struct{}{}
-			res = append(res, s)
+		if _, ok := string_set[s]; !ok { //not found
+			string_set[s] = struct{}{}
+			result = append(result, s)
 		}
 	}
 
-	return res
+	return result
 }
