@@ -8,19 +8,14 @@ import (
 
 func Palindrome1(s string) bool {
 	//regexp
-	var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9 ]+`)
-	nonAlphanumericRegex.ReplaceAllString(s, "")
-	clearedStr := strings.Map(func(r rune) rune {
-		if !unicode.IsLetter(r) && !unicode.IsNumber(r) {
-			return -1
-		}
-		return unicode.ToLower(r)
-	}, s)
+	var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
+	clearedStr := nonAlphanumericRegex.ReplaceAllString(s, "")
 
-	runeArr := []rune(clearedStr)
+	runeArr := []rune(strings.ToLower(clearedStr))
 	if len(runeArr) < 2 {
 		return true
 	}
+
 	l := 0
 	r := len(runeArr) - 1
 	for l < r {
@@ -34,25 +29,27 @@ func Palindrome1(s string) bool {
 	return true
 }
 
-func Palindrome2Helper(str string) bool {
-	if len(str) <= 1 {
+func Palindrome2Helper(s string) bool {
+	//recursion
+	if len(s) <= 1 {
 		return true
 	}
-	if str[0] != str[len(str)-1] {
+	if s[0] != s[len(s)-1] {
 		return false
 	}
-	return Palindrome2Helper(str[1 : len(str)-1])
+	return Palindrome2Helper(s[1 : len(s)-1])
 }
 
 func Palindrome2(s string) bool {
-	result := make([]rune, 0)
-	for _, ch := range s {
-		if unicode.IsNumber(ch) || unicode.IsLetter(ch) {
-			result = append(result, unicode.ToLower(ch))
+	// unicode
+	clearedStr := strings.Map(func(r rune) rune {
+		if !unicode.IsLetter(r) && !unicode.IsNumber(r) {
+			return -1
 		}
-	}
+		return unicode.ToLower(r)
+	}, s)
 
-	return Palindrome2Helper(string(result))
+	return Palindrome2Helper(string(clearedStr))
 }
 
 func Palindrome3(s string) bool {
@@ -68,6 +65,7 @@ func Palindrome3(s string) bool {
 	if len(runeArr) < 2 {
 		return true
 	}
+
 	l := 0
 	r := len(runeArr) - 1
 	for l < r {
