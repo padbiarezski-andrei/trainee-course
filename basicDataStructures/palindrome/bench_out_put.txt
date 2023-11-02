@@ -1,0 +1,10 @@
+go test --bench . -benchmem
+
+goos: windows
+goarch: amd64
+pkg: trainee-course/basicDataStructures/palindrome
+BenchmarkPalindrome1-4            383134              2833 ns/op            1024 B/op         16 allocs/op
+BenchmarkPalindrome2-4           5388397               195.5 ns/op            24 B/op          2 allocs/op
+BenchmarkPalindrome3-4          21495007                55.53 ns/op            0 B/op          0 allocs/op
+PASS
+ok      trainee-course/basicDataStructures/palindrome   4.874s

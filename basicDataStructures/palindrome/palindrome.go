@@ -4,7 +4,6 @@ import (
 	"regexp"
 	"strings"
 	"unicode"
-	"unicode/utf8"
 )
 
 func Palindrome1(s string) bool {
@@ -35,20 +34,25 @@ func Palindrome1(s string) bool {
 	return true
 }
 
+func Palindrome2Helper(str string) bool {
+	if len(str) <= 1 {
+		return true
+	}
+	if str[0] != str[len(str)-1] {
+		return false
+	}
+	return Palindrome2Helper(str[1 : len(str)-1])
+}
+
 func Palindrome2(s string) bool {
-	panic("not implemented")
-	//need to rewrite
-	len := utf8.RuneCountInString(s)
-	for len > 1 {
-		l, sizeL := utf8.DecodeRuneInString(s)
-		r, sizeR := utf8.DecodeLastRuneInString(s)
-		if l != r {
-			return false
+	result := make([]rune, 0)
+	for _, ch := range s {
+		if unicode.IsNumber(ch) || unicode.IsLetter(ch) {
+			result = append(result, unicode.ToLower(ch))
 		}
-		len -= sizeL + sizeR
 	}
 
-	return true
+	return Palindrome2Helper(string(result))
 }
 
 func Palindrome3(s string) bool {
