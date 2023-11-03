@@ -32,6 +32,8 @@ var palindromeTests = []struct {
 	{testName: "true test 1", input: "22\\2\\22", want: true},
 	{testName: "true test 2", input: "Mr. Owl ate my metal worm", want: true},
 	{testName: "false test 1", input: "youtube", want: false},
+	{testName: "fl test 1", input: "日本語語本日", want: true},
+	{testName: "fl test 2", input: "шалаш", want: true},
 }
 
 func TestPalindrome1(t *testing.T) {

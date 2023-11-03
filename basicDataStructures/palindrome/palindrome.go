@@ -8,7 +8,7 @@ import (
 
 func Palindrome1(s string) bool {
 	//regexp
-	var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
+	var nonAlphanumericRegex = regexp.MustCompile(`[.,\\\/|#!$%\^&\*;:{}=\-_~() ` + "`" + `]+`)
 	clearedStr := nonAlphanumericRegex.ReplaceAllString(s, "")
 
 	runeArr := []rune(strings.ToLower(clearedStr))
@@ -29,15 +29,15 @@ func Palindrome1(s string) bool {
 	return true
 }
 
-func Palindrome2Helper(s string) bool {
+func Palindrome2Helper(r []rune) bool {
 	//recursion
-	if len(s) <= 1 {
+	if len(r) <= 1 {
 		return true
 	}
-	if s[0] != s[len(s)-1] {
+	if r[0] != r[len(r)-1] {
 		return false
 	}
-	return Palindrome2Helper(s[1 : len(s)-1])
+	return Palindrome2Helper(r[1 : len(r)-1])
 }
 
 func Palindrome2(s string) bool {
@@ -49,7 +49,7 @@ func Palindrome2(s string) bool {
 		return unicode.ToLower(r)
 	}, s)
 
-	return Palindrome2Helper(clearedStr)
+	return Palindrome2Helper([]rune(clearedStr))
 }
 
 func Palindrome3(s string) bool {
