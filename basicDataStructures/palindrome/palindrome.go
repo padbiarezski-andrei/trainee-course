@@ -8,8 +8,8 @@ import (
 
 func Palindrome1(s string) bool {
 	//regexp
-	var nonAlphanumericRegex = regexp.MustCompile(`[.,\\\/|#!$%\^&\*;:{}=\-_~() ` + "`" + `]+`)
-	clearedStr := nonAlphanumericRegex.ReplaceAllString(s, "")
+	var punctuationalRegex = regexp.MustCompile(`[.,\\\/|#!$%\^&\*;:{}=\-_~() ` + "`" + `]+`)
+	clearedStr := punctuationalRegex.ReplaceAllString(s, "")
 
 	runeArr := []rune(strings.ToLower(clearedStr))
 	if len(runeArr) < 2 {
