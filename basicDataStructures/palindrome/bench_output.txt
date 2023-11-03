@@ -1,0 +1,14 @@
+go test -bench.
+goos: windows
+goarch: amd64
+pkg: trainee-course/basicDataStructures/palindrome
+cpu: AMD Ryzen 3 4300U with Radeon Graphics
+BenchmarkPalindrome1-4            686223              1687 ns/op
+BenchmarkPalindrome2-4          44411382                24.82 ns/op
+BenchmarkPalindrome3-4          34959282                33.95 ns/op
+PASS
+ok      trainee-course/basicDataStructures/palindrome   4.530s
+
+
+
+As we can see best solution used recursion and clean a string without regexp

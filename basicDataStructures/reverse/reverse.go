@@ -30,7 +30,7 @@ func reverseInPlace(s []rune) {
 	return
 }
 
-func reverseWords1(s string) string {
+func reverseWordsWithoutSTD(s string) string {
 	rune_arr := []rune(s)
 	l := 0
 	for r := 0; r < len(rune_arr); r++ {
@@ -49,7 +49,7 @@ func reverseWords1(s string) string {
 	return string(rune_arr)
 }
 
-func reverseWords2(s string) string {
+func reverseWordsWithSTD(s string) string {
 	var res strings.Builder
 	ss := strings.Split(s, " ")
 	for _, w := range ss {

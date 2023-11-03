@@ -5,6 +5,18 @@ import (
 	"testing"
 )
 
+func BenchmarkReverseWordsWithoutSTD(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		reverseWordsWithoutSTD("qwert asdfg zxcvb   youtube")
+	}
+}
+
+func BenchmarkReverseWordsWIthStd(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		reverseWordsWithSTD("qwert asdfg zxcvb   youtube")
+	}
+}
+
 var reverseTests = []struct {
 	testName string
 	input    []rune
@@ -52,7 +64,7 @@ var reverseWordsTests = []struct {
 func TestReverseWords1(t *testing.T) {
 	for _, tc := range reverseWordsTests {
 		t.Run(tc.testName, func(t *testing.T) {
-			got := reverseWords1(tc.input)
+			got := reverseWordsWithoutSTD(tc.input)
 			if !reflect.DeepEqual(got, tc.want) {
 				t.Fatalf("expected: %#v, got: %#v", tc.want, got)
 			}
@@ -63,7 +75,7 @@ func TestReverseWords1(t *testing.T) {
 func TestReverseWords2(t *testing.T) {
 	for _, tc := range reverseWordsTests {
 		t.Run(tc.testName, func(t *testing.T) {
-			got := reverseWords2(tc.input)
+			got := reverseWordsWithSTD(tc.input)
 			if !reflect.DeepEqual(got, tc.want) {
 				t.Fatalf("expected: %#v, got: %#v", tc.want, got)
 			}
