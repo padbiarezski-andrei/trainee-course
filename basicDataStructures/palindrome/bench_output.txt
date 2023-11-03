@@ -11,4 +11,4 @@ ok      trainee-course/basicDataStructures/palindrome   4.530s
 
 
 
-As we can see best solution used recursion and clean a string without regexp
+Best solution uses recursion and cleans string without using regexp

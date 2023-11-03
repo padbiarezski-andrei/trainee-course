@@ -11,4 +11,4 @@ ok      trainee-course/basicDataStructures/reverse      3.050s
 
 
 
-Solution that use standard library function working significant slowly and allocate extra memory
+Solution that use standard library function slow and allocate extra memory
