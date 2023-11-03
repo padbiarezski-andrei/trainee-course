@@ -49,7 +49,7 @@ func Palindrome2(s string) bool {
 		return unicode.ToLower(r)
 	}, s)
 
-	return Palindrome2Helper(string(clearedStr))
+	return Palindrome2Helper(clearedStr)
 }
 
 func Palindrome3(s string) bool {

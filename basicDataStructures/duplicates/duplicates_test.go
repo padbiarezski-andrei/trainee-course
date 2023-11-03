@@ -6,8 +6,6 @@ import (
 )
 
 func TestRemoveDuplicates(t *testing.T) {
-	// t.Parallel()
-
 	tests := []struct {
 		testName string
 		input    []string
@@ -20,7 +18,7 @@ func TestRemoveDuplicates(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.testName, func(t *testing.T) {
 			got := removeDuplicates(tc.input)
-			if !reflect.DeepEqual(tc.want, got) { //?
+			if !reflect.DeepEqual(tc.want, got) {
 				t.Fatalf("expected: %v, got: %v", tc.want, got)
 			}
 		})

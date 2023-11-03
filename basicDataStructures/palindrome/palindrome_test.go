@@ -27,16 +27,14 @@ var palindromeTests = []struct {
 	input    string
 	want     bool
 }{
-	{testName: "empty", input: "", want: true},     // ???
-	{testName: "one char", input: "!", want: true}, // ???
+	{testName: "empty", input: "", want: true},
+	{testName: "one char", input: "!", want: true},
 	{testName: "true test 1", input: "22\\2\\22", want: true},
 	{testName: "true test 2", input: "Mr. Owl ate my metal worm", want: true},
 	{testName: "false test 1", input: "youtube", want: false},
 }
 
 func TestPalindrome1(t *testing.T) {
-	// t.Parallel()
-
 	for _, tc := range palindromeTests {
 		t.Run(tc.testName, func(t *testing.T) {
 			got := Palindrome1(tc.input)
@@ -48,8 +46,6 @@ func TestPalindrome1(t *testing.T) {
 }
 
 func TestPalindrome2(t *testing.T) {
-	// t.Parallel()
-
 	for _, tc := range palindromeTests {
 		t.Run(tc.testName, func(t *testing.T) {
 			got := Palindrome2(tc.input)
@@ -61,8 +57,6 @@ func TestPalindrome2(t *testing.T) {
 }
 
 func TestPalindrome3(t *testing.T) {
-	// t.Parallel()
-
 	for _, tc := range palindromeTests {
 		t.Run(tc.testName, func(t *testing.T) {
 			got := Palindrome3(tc.input)
