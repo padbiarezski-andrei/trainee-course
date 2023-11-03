@@ -1,0 +1,14 @@
+go test --bench . -benchmem
+goos: windows
+goarch: amd64
+pkg: trainee-course/basicDataStructures/reverse
+cpu: AMD Ryzen 3 4300U with Radeon Graphics
+BenchmarkReverseWordsWithoutSTD-4        2648960               433.8 ns/op            32 B/op          1 allocs/op
+BenchmarkReverseWordsWIthStd-4            489022              2326 ns/op             288 B/op         15 allocs/op
+PASS
+ok      trainee-course/basicDataStructures/reverse      3.050s
+
+
+
+
+Solution that use standard library function slow and allocate extra memory
