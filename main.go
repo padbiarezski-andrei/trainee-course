@@ -11,6 +11,7 @@ import (
 )
 
 // ///////////////////////////////////////////////////////////////
+// var ErrInvalidURL = errors.New("invalid URL")
 type ErrInvalidURL struct {
 	url string
 	err error
@@ -32,6 +33,7 @@ func (e *ErrInvalidURL) Unwrap() error {
 }
 
 // ///////////////////////////////////////////////////////////////
+// var ErrConnectionFailed = errors.New("cannot connect")
 type ErrConnectionFailed struct {
 	url string
 	err error
@@ -53,6 +55,7 @@ func (e *ErrConnectionFailed) Unwrap() error {
 }
 
 // ///////////////////////////////////////////////////////////////
+// var ErrDownloadFailed = errors.New("cannot download file")
 type ErrDownloadFailed struct {
 	url string
 	err error
@@ -74,6 +77,7 @@ func (e *ErrDownloadFailed) Unwrap() error {
 }
 
 // ///////////////////////////////////////////////////////////////
+// var ErrFileNotFound = errors.New("not such file")
 type ErrFileNotFound struct {
 	url string
 	err error
@@ -148,13 +152,13 @@ func main() {
 
 		switch {
 		case errors.As(err, &errInvalidURL):
-			fmt.Printf("Invalide URL. Please check the URL correctness. err:%s\n", err)
+			fmt.Printf("Invalide URL. Please check the URL correctness. err:%s\n", errInvalidURL)
 
 		case errors.As(err, &errConnectionFailed):
-			fmt.Printf("Cannot connect to %q. Please check your connection settings or try to again later. err:%s\n", *url, err)
+			fmt.Printf("Cannot connect to %q. Please check your connection settings or try to again later. err:%s\n", *url, errConnectionFailed)
 
 		case errors.As(err, &errDownloadFailed):
-			fmt.Printf("Error occured while downloading file %q. Please check if file is available. err:%s\n", *url, err)
+			fmt.Printf("Error occured while downloading file %q. Please check if file is available. err:%s\n", *url, errDownloadFailed)
 
 		case errors.As(err, &errNotFOund):
 			fmt.Printf("No such file found. Please check if the file available or URL %q is correct.\n", *url)
