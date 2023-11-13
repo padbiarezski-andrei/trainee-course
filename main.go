@@ -23,16 +23,18 @@ func main() {
 	switch *shapeType {
 	case "circle":
 		if *radius <= 0.0 {
+			fmt.Println("the radius of the circle must be greater than zero")
 			os.Exit(1)
 		}
 		shape = shapes.Circle{R: *radius}
 	case "rectangle":
 		if *width <= 0.0 || *height <= 0.0 {
+			fmt.Println("the side of the rectangle must be greater than zero")
 			os.Exit(1)
 		}
 		shape = shapes.Rectangle{Width: *width, Height: *height}
 	default:
-		fmt.Println("unknown shape type")
+		fmt.Println("unknown shape type. Please use --help to see more information about available options")
 		os.Exit(1)
 	}
 
