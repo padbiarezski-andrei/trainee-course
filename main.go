@@ -4,7 +4,6 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"math"
 	"math/rand"
 	"runtime"
 	"sync"
@@ -42,6 +41,7 @@ K = 10_000, N = 100, M = 50
 var r = rand.New(rand.NewSource(time.Now().Unix()))
 
 type cake struct {
+	id       uint64
 	BakedBy  uint64
 	BakeTime time.Duration
 	PackedBy uint64
@@ -50,42 +50,51 @@ type cake struct {
 
 // not pointer
 func (c cake) String() string {
-	return fmt.Sprintf("cake: BakedBy %v,\tBakeTime %v,\tPackedBy %v,\tPackTime %v", c.BakedBy, c.BakeTime, c.PackedBy, c.PackTime)
+	return fmt.Sprintf("cake: id %v, BakedBy %v,\tBakeTime %v,\tPackedBy %v,\tPackTime %v", c.id, c.BakedBy, c.BakeTime, c.PackedBy, c.PackTime)
+}
+
+func getRandDuration(i uint64) time.Duration {
+	return time.Microsecond*time.Duration(i) +
+		time.Microsecond*time.Duration(int64(float64(r.Intn(1000))*r.Float64())) +
+		time.Microsecond
 }
 
 func bake(ctx context.Context, wg *sync.WaitGroup, backedCakeOutCh chan<- cake, currentCakeInCh <-chan uint64, i uint64) {
-	var T1 time.Duration
-	if r.Intn(2) != 0 {
-		T1 = time.Microsecond*time.Duration(i) + time.Microsecond*time.Duration(int64(float64(r.Int63n(int64(i%math.MaxInt64)+1))*r.Float64())) + time.Microsecond
-	} else {
-		T1 = time.Microsecond*time.Duration(i) - time.Microsecond*time.Duration(int64(float64(r.Int63n(int64(i%math.MaxInt64)+1))*r.Float64())) + time.Microsecond
-	}
-	time.Sleep(T1)
+	defer wg.Done()
 
-	for range currentCakeInCh {
-		backedCakeOutCh <- cake{BakedBy: i, BakeTime: T1}
-	}
+	for {
+		select {
+		case id, ok := <-currentCakeInCh:
+			if ok {
+				T1 := getRandDuration(i)
+				time.Sleep(T1)
 
-	wg.Done()
+				backedCakeOutCh <- cake{id: id, BakedBy: i, BakeTime: T1}
+			}
+		case <-ctx.Done():
+			return
+		}
+	}
 }
 
-func pack(ctx context.Context, wg *sync.WaitGroup, packedCakeOutCh chan<- cake, cakeToPackInCh <-chan cake, i uint64) {
-	var T2 time.Duration
-	if r.Intn(2) != 0 {
-		T2 = time.Microsecond*time.Duration(i) + time.Microsecond*time.Duration(int64(float64(r.Int63n(int64(i%math.MaxInt64)+1))*r.Float64())) + time.Microsecond
-	} else {
-		T2 = time.Microsecond*time.Duration(i) - time.Microsecond*time.Duration(int64(float64(r.Int63n(int64(i%math.MaxInt64)+1))*r.Float64())) + time.Microsecond
+func pack(ctx context.Context, wg *sync.WaitGroup, packedCakeOutCh chan<- cake, bakedCakeToPackInCh <-chan cake, i uint64) {
+	defer wg.Done()
+
+	for {
+		select {
+		case c, ok := <-bakedCakeToPackInCh:
+			if ok {
+				T2 := getRandDuration(i)
+				time.Sleep(T2)
+				c.PackedBy = i
+				c.PackTime = T2
+
+				packedCakeOutCh <- c
+			}
+		case <-ctx.Done():
+			return
+		}
 	}
-	time.Sleep(T2)
-
-	for c := range cakeToPackInCh {
-		c.PackedBy = i
-		c.PackTime = T2
-
-		packedCakeOutCh <- c
-	}
-
-	wg.Done()
 }
 
 func main() {
@@ -95,60 +104,66 @@ func main() {
 	// c := cake{1, time.Duration(1 * time.Second), 1, time.Microsecond * 2}
 	// fmt.Println(c)
 	// return
-
+	start := time.Now()
 	var totalCake uint64 = 1000
-	var N uint64 = 50
-	var M uint64 = 20
+	var N uint64 = 1
+	var M uint64 = 1
+	delay := 5 * time.Second
 
 	flag.Parse()
 
 	currentCakeProducerCh := make(chan uint64, runtime.NumCPU())
-	cakeProducerCh := make(chan cake, runtime.NumCPU())
+	bakedCakeProducerCh := make(chan cake, runtime.NumCPU())
 	packedCakeProducerCh := make(chan cake, runtime.NumCPU())
 
 	var wgFurnace sync.WaitGroup
 	var wgPacker sync.WaitGroup
 
 	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(ctx, delay)
+	time.AfterFunc(5*time.Second, cancel)
 
-	go func(totalCakesTo uint64, outCh chan<- uint64) {
-		for i := uint64(0); i < totalCakesTo; i++ {
+	go func(ctx context.Context, totalCakesTo uint64, outCh chan<- uint64) {
+		i := uint64(0)
+		for ; i < totalCakesTo; i++ {
 			outCh <- i
 		}
-		close(currentCakeProducerCh)
-	}(totalCake, currentCakeProducerCh)
+		fmt.Println("all orders passed. Total:", i)
+		close(outCh)
+	}(ctx, totalCake, currentCakeProducerCh)
 
 	go func() {
 		for i := uint64(0); i < N; i++ {
 			wgFurnace.Add(1)
-			// i / -2 * [0,1) + i
-			// i = 10
-			// -5 * [0,1) + 10
-			// -2.5 + 10 = 7.5
-
-			go bake(ctx, &wgFurnace, cakeProducerCh, currentCakeProducerCh, i)
+			go bake(ctx, &wgFurnace, bakedCakeProducerCh, currentCakeProducerCh, i)
 		}
 
 		wgFurnace.Wait()
-		close(cakeProducerCh)
+		close(bakedCakeProducerCh)
 	}()
 
 	go func() {
 		for i := uint64(0); i < M; i++ {
 			wgPacker.Add(1)
-
-			go pack(ctx, &wgPacker, packedCakeProducerCh, cakeProducerCh, i)
+			go pack(ctx, &wgPacker, packedCakeProducerCh, bakedCakeProducerCh, i)
 		}
 
 		wgPacker.Wait()
 		close(packedCakeProducerCh)
 	}()
 
-	totalPackedBakedCage := uint64(0)
-	for c := range packedCakeProducerCh {
-		totalPackedBakedCage++
-		fmt.Println(totalPackedBakedCage, c)
-	}
+	go func(cf context.CancelFunc) {
+		var canseledLine string
+		fmt.Scanln(&canseledLine)
+		cf()
 
-	select {}
+		fmt.Println("canseled by this line", canseledLine)
+	}(cancel)
+
+	totalPackedBakedCake := uint64(0)
+	for c := range packedCakeProducerCh {
+		totalPackedBakedCake++
+		fmt.Println(totalPackedBakedCake, c)
+	}
+	fmt.Printf("Done! Total cake %v out of %v in %v, delay was %v", totalPackedBakedCake, totalCake, time.Since(start), delay)
 }
