@@ -70,6 +70,7 @@ func pack(ctx context.Context, wg *sync.WaitGroup, packedCakeOutCh chan<- cake, 
 }
 
 func main() {
+<<<<<<< HEAD
 	totalCake := flag.Uint64("K", 0, "total cakes required")
 	N := flag.Uint64("N", 0, "total furnaces")
 	M := flag.Uint64("M", 0, "total packers")
@@ -83,6 +84,25 @@ func main() {
 	bakedCakeCh := make(chan cake, runtime.NumCPU())
 	packedCakeCh := make(chan cake, runtime.NumCPU())
 
+=======
+	// totalCake := flag.Uint64("K", 0, "total cakes required")
+	// N := flag.Uint64("N", 0, "total furnaces")
+	// M := flag.Uint64("M", 0, "total packers")
+
+	start := time.Now()
+	var totalCake uint64 = 1000
+	var N uint64 = 1
+	var M uint64 = 1
+
+	delay := 5 * time.Second
+
+	flag.Parse()
+
+	currentCakeCh := make(chan uint64, runtime.NumCPU())
+	bakedCakeCh := make(chan cake, runtime.NumCPU())
+	packedCakeCh := make(chan cake, runtime.NumCPU())
+
+>>>>>>> dfd8ab85aae3bf75030bebcffa21bdc20d0fe3a7
 	var wgFurnaces sync.WaitGroup
 	var wgPackers sync.WaitGroup
 
@@ -96,10 +116,17 @@ func main() {
 			outCh <- i
 		}
 		close(outCh)
+<<<<<<< HEAD
 	}(ctx, *totalCake, currentCakeCh)
 
 	go func() {
 		for i := uint64(0); i < *N; i++ {
+=======
+	}(ctx, totalCake, currentCakeCh)
+
+	go func() {
+		for i := uint64(0); i < N; i++ {
+>>>>>>> dfd8ab85aae3bf75030bebcffa21bdc20d0fe3a7
 			wgFurnaces.Add(1)
 			go bake(ctx, &wgFurnaces, bakedCakeCh, currentCakeCh, i)
 		}
@@ -109,7 +136,11 @@ func main() {
 	}()
 
 	go func() {
+<<<<<<< HEAD
 		for i := uint64(0); i < *M; i++ {
+=======
+		for i := uint64(0); i < M; i++ {
+>>>>>>> dfd8ab85aae3bf75030bebcffa21bdc20d0fe3a7
 			wgPackers.Add(1)
 			go pack(ctx, &wgPackers, packedCakeCh, bakedCakeCh, i)
 		}
