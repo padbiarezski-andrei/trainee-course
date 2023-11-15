@@ -36,7 +36,7 @@ func (c cake) String() string {
 
 func getRandDuration(i uint64) time.Duration {
 	return time.Microsecond*time.Duration(i) +
-		time.Microsecond*time.Duration(int64(float64(r.Intn(1000000))*r.Float64())) +
+		time.Microsecond*time.Duration(r.Int63n(1000000)) +
 		time.Microsecond
 }
 
