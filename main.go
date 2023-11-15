@@ -19,6 +19,9 @@ import (
 // go run . --K=1000 --N=250 --M=125
 // Done! Total cake 1000 out of 1000 in 2.9122245s, delay was 3s
 
+// go run . --K=1000 --N=125 --M=250
+// Done! Total cake 814 out of 1000 in 6.848299s, delay was 3s
+
 var r = rand.New(rand.NewSource(time.Now().Unix()))
 
 type cake struct {
@@ -36,7 +39,7 @@ func (c cake) String() string {
 
 func getRandDuration(i uint64) time.Duration {
 	return time.Microsecond*time.Duration(i) +
-		time.Microsecond*time.Duration(int64(float64(r.Intn(1000000))*r.Float64())) +
+		time.Microsecond*time.Duration(r.Int63n(1000000)) +
 		time.Microsecond
 }
 
