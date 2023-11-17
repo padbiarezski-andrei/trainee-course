@@ -11,16 +11,16 @@ import (
 )
 
 // go run . --K=1000 --N=50 --M=10
-// Done! Total cake 135 out of 1000 in 3.9986815s, delay was 3s
+// Done! Total cake 71 out of 1000 in 5.716077123s, delay was 3s
 
 // go run . --K=1000 --N=8 --M=5
-// Done! Total cake 59 out of 1000 in 3.4097631s, delay was 3s
+// Done! Total cake 28 out of 1000 in 4.993860512s, delay was 3s
 
 // go run . --K=1000 --N=250 --M=125
-// Done! Total cake 1000 out of 1000 in 2.9122245s, delay was 3s
+// Done! Total cake 849 out of 1000 in 7.796713981s, delay was 3s
 
 // go run . --K=1000 --N=125 --M=250
-// Done! Total cake 814 out of 1000 in 6.848299s, delay was 3s
+// Done! Total cake 886 out of 1000 in 6.817758505s, delay was 3s
 
 var r = struct {
 	m   *sync.Mutex
