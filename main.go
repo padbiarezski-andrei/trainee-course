@@ -22,7 +22,10 @@ import (
 // go run . --K=1000 --N=125 --M=250
 // Done! Total cake 814 out of 1000 in 6.848299s, delay was 3s
 
-var r = rand.New(rand.NewSource(time.Now().Unix()))
+var r = struct {
+	m   *sync.Mutex
+	src *rand.Rand
+}{m: &sync.Mutex{}, src: rand.New(rand.NewSource(time.Now().Unix()))}
 
 type cake struct {
 	id       uint64
@@ -38,8 +41,10 @@ func (c cake) String() string {
 }
 
 func getRandDuration(i uint64) time.Duration {
+	r.m.Lock()
+	defer r.m.Unlock()
 	return time.Microsecond*time.Duration(i) +
-		time.Microsecond*time.Duration(r.Int63n(1000000)) +
+		time.Nanosecond*time.Duration(r.src.Int63n(1000000)) +
 		time.Microsecond
 }
 
@@ -153,5 +158,5 @@ func main() {
 		totalPackedBakedCake++
 		fmt.Println(totalPackedBakedCake, c)
 	}
-	fmt.Printf("Done! Total cake %v out of %v in %v, delay was %v", totalPackedBakedCake, *totalCake, time.Since(start), delay)
+	fmt.Printf("Done! Total cake %v out of %v in %v, delay was %v\n", totalPackedBakedCake, *totalCake, time.Since(start), delay)
 }
