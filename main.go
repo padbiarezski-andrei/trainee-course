@@ -10,22 +10,17 @@ import (
 	"time"
 )
 
-// go run . --K=1000 --N=50 --M=10
-// Done! Total cake 71 out of 1000 in 5.716077123s, delay was 3s
-
 // go run . --K=1000 --N=8 --M=5
-// Done! Total cake 28 out of 1000 in 4.993860512s, delay was 3s
+// Done! Total cake 30 out of 1000 in 4.0130116s, delay was 3s
 
-// go run . --K=1000 --N=250 --M=125
-// Done! Total cake 849 out of 1000 in 7.796713981s, delay was 3s
+// go run . --K=1000 --N=50 --M=10
+// Done! Total cake 73 out of 1000 in 4.9845423s, delay was 3s
 
 // go run . --K=1000 --N=125 --M=250
-// Done! Total cake 886 out of 1000 in 6.817758505s, delay was 3s
+// Done! Total cake 851 out of 1000 in 9.0195465s, delay was 3s
 
-var r = struct {
-	m   *sync.Mutex
-	src *rand.Rand
-}{m: &sync.Mutex{}, src: rand.New(rand.NewSource(time.Now().Unix()))}
+// go run . --K=1000 --N=250 --M=125
+// Done! Total cake 892 out of 1000 in 7.9328802s, delay was 3s
 
 type cake struct {
 	id       uint64
@@ -41,10 +36,8 @@ func (c cake) String() string {
 }
 
 func getRandDuration(i uint64) time.Duration {
-	r.m.Lock()
-	defer r.m.Unlock()
 	return time.Microsecond*time.Duration(i) +
-		time.Nanosecond*time.Duration(r.src.Int63n(1000000)) +
+		time.Microsecond*time.Duration(rand.Int63n(1000000)) +
 		time.Microsecond
 }
 
